@@ -8,7 +8,7 @@ export default function AdminScreen() {
   useEffect(() => {
     const fetchLogs = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/logs');
+        const response = await axios.get('http://192.168.1.2:3000/logs');
         setLogs(response.data);
       } catch (err) {
         console.error('Loglar alınamadı:', err);
@@ -27,7 +27,10 @@ export default function AdminScreen() {
         renderItem={({ item }) => (
           <View style={styles.logItem}>
             <Text>{item.action}: {item.details}</Text>
-            <Text>{new Date(item.createdAt).toLocaleString()}</Text>
+            <Text>
+              {new Date(item.createdAt).toLocaleDateString()} {' '}
+              {new Date(item.createdAt).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+            </Text>
           </View>
         )}
       />

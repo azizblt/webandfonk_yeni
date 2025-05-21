@@ -12,30 +12,45 @@ async function seed() {
   if (!adminExists) {
     await User.create({
       username: 'rasit',
-      password: 'admin123',  // Geliştirme aşamasında düz şifre
+      password: 'rasit123',
       email: 'rasit@example.com',
       role: 'admin',
       isActive: true,
     });
-    console.log('Admin kullanıcısı oluşturuldu: rasit / admin123');
+    console.log('Admin kullanıcısı oluşturuldu: rasit / rasit123');
   } else {
     console.log('rasit adlı admin kullanıcısı zaten mevcut.');
   }
 
-  // Stok verisi ekleyelim
+  // Normal kullanıcı ekle
+  const userExists = await User.findOne({ username: 'user' });
+  if (!userExists) {
+    await User.create({
+      username: 'user',
+      password: 'user123',
+      email: 'user@example.com',
+      role: 'user',
+      isActive: true,
+    });
+    console.log('Normal kullanıcı oluşturuldu: user / user123');
+  } else {
+    console.log('user adlı normal kullanıcı zaten mevcut.');
+  }
+
+  // Tüm stokları sil
+  await Stock.deleteMany({});
+  console.log('Tüm stoklar silindi.');
+
+  // Stok verisi ekle (unit ile birlikte)
   const stockData = [
-    { name: 'Ürün A', quantity: 100 },
-    { name: 'Ürün B', quantity: 200 },
+    { name: 'Ürün A', quantity: 100, unit: 'adet' },
+    { name: 'Ürün B', quantity: 200, unit: 'kg' },
+    { name: 'Ürün C', quantity: 50, unit: 'paket' },
   ];
 
   for (const stock of stockData) {
-    const existingStock = await Stock.findOne({ name: stock.name });
-    if (!existingStock) {
-      await Stock.create(stock);
-      console.log(`Stok eklendi: ${stock.name}`);
-    } else {
-      console.log(`Stok zaten mevcut: ${stock.name}`);
-    }
+    await Stock.create(stock);
+    console.log(`Stok eklendi: ${stock.name}`);
   }
 
   mongoose.disconnect();

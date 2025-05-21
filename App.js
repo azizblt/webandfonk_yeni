@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ThemeProvider } from './ThemeContext'; // ✅ Tema desteği eklendi
@@ -11,17 +11,14 @@ import AdminHomeScreen from './screens/AdminHomeScreen';
 import UserManagementScreen from './screens/UserManagementScreen';
 import AdminScreen from './screens/AdminScreen';     // Log ekranı
 import ZReportScreen from './screens/ZReportScreen'; // Z raporu placeholder
+import InvoiceScreen from './screens/InvoiceScreen';
+import InvoiceSummaryScreen from './screens/InvoiceSummaryScreen';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [userRole, setUserRole] = useState(null);
-
-  useEffect(() => {
-    // Burada geçici olarak admin rolü atanıyor. Giriş sonrası gerçek kullanıcıya göre güncellenecek.
-    const user = { role: 'admin' }; // 'user' yaparsan Home açılır
-    setUserRole(user.role);
-  }, []);
+  const [username, setUsername] = useState('');
 
   return (
     <ThemeProvider>
@@ -30,49 +27,52 @@ export default function App() {
           {/* Giriş & Kayıt */}
           <Stack.Screen
             name="Login"
-            component={LoginScreen}
             options={{ headerShown: false }}
-          />
+          >
+            {props => <LoginScreen {...props} setUserRole={setUserRole} setUsername={setUsername} />}
+          </Stack.Screen>
           <Stack.Screen
             name="Register"
             component={RegisterScreen}
             options={{ title: 'Kayıt Ol' }}
           />
-
-          {/* Normal Kullanıcı: Sadece Home görebilir */}
-          {userRole === 'user' && (
-            <Stack.Screen
-              name="Home"
-              component={HomeScreen}
-              options={{ title: 'Ana Sayfa' }}
-            />
-          )}
-
-          {/* Admin: Admin ekranları görünür */}
-          {userRole === 'admin' && (
-            <>
-              <Stack.Screen
-                name="AdminHome"
-                component={AdminHomeScreen}
-                options={{ title: 'Admin Paneli' }}
-              />
-              <Stack.Screen
-                name="Users"
-                component={UserManagementScreen}
-                options={{ title: 'Kullanıcı Yönetimi' }}
-              />
-              <Stack.Screen
-                name="Logs"
-                component={AdminScreen}
-                options={{ title: 'Log Girişleri' }}
-              />
-              <Stack.Screen
-                name="ZReport"
-                component={ZReportScreen}
-                options={{ title: 'Z Raporu' }}
-              />
-            </>
-          )}
+          <Stack.Screen
+            name="Home"
+            options={{ title: 'Ana Sayfa' }}
+          >
+            {props => <HomeScreen {...props} username={username} userRole={userRole} />}
+          </Stack.Screen>
+          <Stack.Screen
+            name="AdminHome"
+            options={{ title: 'Admin Paneli' }}
+          >
+            {props => <AdminHomeScreen {...props} username={username} userRole={userRole} />}
+          </Stack.Screen>
+          <Stack.Screen
+            name="Users"
+            component={UserManagementScreen}
+            options={{ title: 'Kullanıcı Yönetimi' }}
+          />
+          <Stack.Screen
+            name="Logs"
+            component={AdminScreen}
+            options={{ title: 'Log Girişleri' }}
+          />
+          <Stack.Screen
+            name="ZReport"
+            component={ZReportScreen}
+            options={{ title: 'Z Raporu' }}
+          />
+          <Stack.Screen
+            name="Invoice"
+            component={InvoiceScreen}
+            options={{ title: 'Fatura Kes' }}
+          />
+          <Stack.Screen
+            name="InvoiceSummary"
+            component={InvoiceSummaryScreen}
+            options={{ title: 'Fatura Özeti' }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </ThemeProvider>

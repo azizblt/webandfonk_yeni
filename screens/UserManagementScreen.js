@@ -7,7 +7,7 @@ export default function UserManagementScreen() {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/users');
+      const res = await axios.get('http://192.168.1.2:3000/users');
       setUsers(res.data);
     } catch {
       Alert.alert('Hata', 'Kullanıcılar yüklenemedi');
@@ -18,7 +18,7 @@ export default function UserManagementScreen() {
 
   const deleteUser = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/users/${id}`);
+      await axios.delete(`http://192.168.1.2:3000/users/${id}`);
       fetchUsers();
     } catch {
       Alert.alert('Hata', 'Kullanıcı silinemedi');

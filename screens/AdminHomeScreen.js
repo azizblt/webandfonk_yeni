@@ -33,6 +33,13 @@ export default function AdminHomeScreen({ navigation }) {
       >
         <Text style={styles.buttonText}>Z Raporu</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('Invoice')}
+      >
+        <Text style={styles.buttonText}>Fatura Kes</Text>
+      </TouchableOpacity>
     </View>
   );
 }
